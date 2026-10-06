@@ -15,7 +15,7 @@ drashta is a local command center for `~/projects` (Go backend + embedded React 
 ```bash
 gofmt -l .                                       # must print nothing
 go vet ./... && go test -race -count=1 ./...     # about 2 min
-cd web && npx tsc --noEmit -p . && npx vitest run && npm run e2e
+cd web && npm run typecheck && npx vitest run && npm run e2e
 make logs                                        # tail ~/.drashta/drashta.log and launchd.log
 ```
 

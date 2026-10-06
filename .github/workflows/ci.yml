@@ -40,7 +40,7 @@ jobs:
       - name: go test
         run: go test -race -count=1 ./...
       - name: Type check
-        run: npx tsc --noEmit -p .
+        run: npm run typecheck
         working-directory: web
       - name: Web unit tests
         run: npx vitest run

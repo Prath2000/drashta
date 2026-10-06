@@ -42,7 +42,7 @@ go build ./... && go test -race -count=1 ./...
 ```bash
 gofmt -l .                                    # must print nothing
 go vet ./... && go test -race -count=1 ./...  # about 2 minutes
-cd web && npx tsc --noEmit -p . && npx vitest run && npm run e2e
+cd web && npm run typecheck && npx vitest run && npm run e2e
 ```
 
 ## Verify on real data

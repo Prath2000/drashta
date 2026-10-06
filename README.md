@@ -105,7 +105,7 @@ Run from the repository root:
 ```bash
 gofmt -l .                                   # must print nothing
 go vet ./... && go test -race -count=1 ./... # takes a couple of minutes
-cd web && npx tsc --noEmit -p . && npx vitest run && npm run e2e
+cd web && npm run typecheck && npx vitest run && npm run e2e
 ```
 
 - Warning: `npm ci` deletes `web/node_modules` and reinstalls it. Run it on purpose, not by habit. `make web` runs it.

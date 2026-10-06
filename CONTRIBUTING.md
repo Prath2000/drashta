@@ -13,7 +13,7 @@ Thanks for helping. This is a small project, so keep changes focused.
 ```bash
 gofmt -l .                                   # must print nothing
 go vet ./... && go test -race -count=1 ./...
-cd web && npx tsc --noEmit -p . && npx vitest run && npm run e2e
+cd web && npm run typecheck && npx vitest run && npm run e2e
 ```
 
 - `npm run e2e` needs Playwright browsers and is optional in CI.
