@@ -1,0 +1,59 @@
+#!/bin/bash
+# plash-mode: put the Plash desktop into one exact mode (contrib/desktop/README.md).
+#
+#   plash-mode browse      drashta, Browsing Mode on (click, type, Open ↗)   tap ⌥, then B
+#   plash-mode wallpaper   drashta, Browsing Mode off (quiet readout)        tap ⌥, then W
+#   plash-mode blank       transparent /blank page: the normal wallpaper     tap ⌥, then N
+#
+# Plash only has toggle commands, so this reads Plash's saved state first and
+# toggles only what differs. Karabiner-Elements calls it (contrib/desktop/karabiner-rule.json),
+# and so do the mode buttons in drashta's top bar (POST /api/desktop). At the end it
+# writes the mode to ~/.drashta/plash-mode.state, which GET /api/desktop reads.
+set -u
+PATH=/usr/bin:/bin
+
+case "${1:-}" in
+browse) want_site=drashta want_browse=1 ;;
+wallpaper) want_site=drashta want_browse=0 ;;
+blank) want_site=blank want_browse=0 ;;
+*)
+	echo "usage: plash-mode browse|wallpaper|blank" >&2
+	exit 2
+	;;
+esac
+
+# `log show` does not surface logger lines on this Mac, so keep a plain log file too.
+mkdir -p "$HOME/.drashta"
+LOG="$HOME/.drashta/plash-mode.log"
+exec 2>>"$LOG"
+echo "$(date '+%F %T') $1 start" >>"$LOG"
+trap 'echo "$(date "+%F %T") $1 end" >>"$LOG"' EXIT
+logger -t plash-mode "$1"
+
+if ! pgrep -xq Plash; then
+	open -g -a Plash
+	sleep 1.5
+fi
+
+# The website list is one escaped JSON object per line; the current one has "isCurrent":true.
+current_site() {
+	if defaults read com.sindresorhus.Plash websites 2>/dev/null | grep -E 'isCurrent[^a-z]*true' | grep -qE '4455[^a-z]*blank'; then
+		echo blank
+	else
+		echo drashta
+	fi
+}
+
+sites=$(defaults read com.sindresorhus.Plash websites 2>/dev/null | grep -c 'isCurrent')
+for ((i = 0; i < sites; i++)); do
+	[ "$(current_site)" = "$want_site" ] && break
+	open -g "plash:next"
+	sleep 0.4
+done
+
+browse=$(defaults read com.sindresorhus.Plash isBrowsingMode 2>/dev/null || echo 0)
+if [ "$browse" != "$want_browse" ]; then
+	open -g "plash:toggle-browsing-mode"
+fi
+
+echo "$1" >"$HOME/.drashta/plash-mode.state"

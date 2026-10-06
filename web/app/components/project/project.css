@@ -1,0 +1,71 @@
+/* Project page (02-ui-spec §5). Ported from the frozen prototype (Project screen).
+   Weight 400 only, no italics. Hover states only in browsing mode (02-ui-spec §4). */
+
+.pj-root {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+  background: var(--ground);
+  color: var(--text);
+  font-size: 12px;
+  text-align: left;
+}
+
+.pj-root button {
+  font: inherit;
+  font-size: 12px;
+}
+
+/* rows and cards: a faint raised fill on hover, browsing mode only */
+html:not(.desktop) .pj-hover:hover:not(:disabled),
+html.plash-is-browsing-mode .pj-hover:hover:not(:disabled) {
+  background: var(--raised);
+}
+html:not(.desktop) .pj-out:hover:not(:disabled),
+html.plash-is-browsing-mode .pj-out:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.pj-root button:disabled {
+  opacity: 1;
+}
+.pj-root .pj-dim:disabled {
+  opacity: 0.45;
+}
+
+.pj-trunc {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pj-search {
+  height: 36px;
+  min-width: 0;
+  flex: 1 1 260px;
+  max-width: 420px;
+  padding: 0 12px;
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: 3px;
+  color: var(--text);
+  font-size: 12px;
+}
+.pj-search:focus-visible {
+  outline: 1px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.pj-readme {
+  margin: 0;
+  padding: 14px 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  max-height: 360px;
+  overflow: auto;
+}

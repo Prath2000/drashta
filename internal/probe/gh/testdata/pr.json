@@ -1,0 +1,9 @@
+[
+  {"number":7,"title":"Add chart tooltips","state":"OPEN","isDraft":false,"headRefName":"feat/tooltips","author":{"login":"alice"},"updatedAt":"2026-09-28T10:00:00Z","url":"https://github.com/acme/widgets/pull/7"},
+  {"number":9,"title":"WIP refactor of the\nwidget loader","state":"OPEN","isDraft":true,"headRefName":"refactor","author":{"login":"bob"},"updatedAt":"2026-09-30T09:30:00Z","url":"https://github.com/acme/widgets/pull/9"},
+  {"number":11,"title":"Link to another host","state":"OPEN","isDraft":false,"headRefName":"x","author":{"login":"eve"},"updatedAt":"2026-09-30T09:31:00Z","url":"https://evil.example/acme/widgets/pull/11"},
+  {"number":12,"title":"Plain http link","state":"OPEN","isDraft":false,"headRefName":"y","author":{"login":"eve"},"updatedAt":"2026-09-30T09:32:00Z","url":"http://github.com/acme/widgets/pull/12"},
+  {"number":13,"title":"Look-alike host","state":"OPEN","isDraft":false,"headRefName":"z","author":{"login":"eve"},"updatedAt":"2026-09-30T09:33:00Z","url":"https://github.com.evil.example/acme/widgets/pull/13"},
+  {"number":14,"title":"User info trick","state":"OPEN","isDraft":false,"headRefName":"w","author":{"login":"eve"},"updatedAt":"2026-09-30T09:34:00Z","url":"https://github.com@evil.example/acme/widgets/pull/14"},
+  {"number":15,"title":"No url","state":"OPEN","isDraft":false,"headRefName":"v","author":{"login":"eve"},"updatedAt":"2026-09-30T09:35:00Z","url":""}
+]

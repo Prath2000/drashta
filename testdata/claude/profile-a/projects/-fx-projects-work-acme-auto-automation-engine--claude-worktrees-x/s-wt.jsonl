@@ -1,0 +1,3 @@
+{"type":"file-history-snapshot","messageId":"m0","snapshot":{"trackedFileBackups":{}},"isSnapshotUpdate":false}
+{"parentUuid":null,"cwd":"/fx/projects/work/acme_auto/automation/engine/.claude/worktrees/x","sessionId":"s-wt","type":"user","message":{"role":"user","content":"Refactor the worktree scheduler"},"uuid":"w1","timestamp":"2026-09-02T08:00:00.000Z"}
+{"parentUuid":"w1","cwd":"/fx/projects/work/acme_auto/automation/engine/.claude/worktrees/x","sessionId":"s-wt","type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Sure."}]},"uuid":"w2","timestamp":"2026-09-02T08:01:00.000Z"}

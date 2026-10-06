@@ -1,0 +1,88 @@
+$ drashta task link T-3 commit:abc1234
+exit: 0
+--- stdout
+T-3 linked commit:abc1234
+
+$ drashta task link T-3 commit:abc1234
+exit: 0
+--- stdout
+T-3 is already linked to commit:abc1234
+
+$ drashta task link T-3 file:src/theme.ts#L10-L20
+exit: 0
+--- stdout
+T-3 linked file:src/theme.ts#L10-L20
+
+$ drashta task link T-3 T-2
+exit: 0
+--- stdout
+T-3 linked task:T-2
+
+$ drashta task link T-3 snapshot:T-2/v2
+exit: 0
+--- stdout
+T-3 linked snapshot:T-2/v2
+
+$ drashta task link T-3 ledger:commit:bdcb99c
+exit: 0
+--- stdout
+T-3 linked ledger:commit:bdcb99c
+
+=== .drashta/tasks/T-3.md
+---
+id: T-3
+title: Dark palette tokens
+status: in_progress
+feature: F-2
+assignee: alice
+created: 2026-09-28T09:30:00+05:30
+created_by: alice
+updated: 2026-10-01T10:00:00+05:30
+links:
+  - commit:abc1234
+  - file:src/theme.ts#L10-L20
+  - task:T-2
+  - snapshot:T-2/v2
+  - ledger:commit:bdcb99c
+unlinks: []
+---
+Define the colour tokens first. Components come after.
+
+## Log
+- 2026-10-01T10:00+05:30 Claude linked commit:abc1234
+- 2026-10-01T10:00+05:30 Claude linked file:src/theme.ts#L10-L20
+- 2026-10-01T10:00+05:30 Claude linked task:T-2
+- 2026-10-01T10:00+05:30 Claude linked snapshot:T-2/v2
+- 2026-10-01T10:00+05:30 Claude linked ledger:commit:bdcb99c
+
+$ drashta task link T-3 T-3
+exit: 2
+--- stdout
+--- stderr
+drashta: a task cannot link to itself
+run 'drashta --help' to see the commands
+
+$ drashta task link T-3 task:T-99
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta task link T-3 'not a ref'
+exit: 1
+--- stdout
+--- stderr
+drashta: authored: invalid value: ref "not a ref" needs the form type:id
+
+$ drashta task link T-99 commit:abc1234
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta task link T-3
+exit: 2
+--- stdout
+--- stderr
+usage: drashta task link <T-id> <ref>
+

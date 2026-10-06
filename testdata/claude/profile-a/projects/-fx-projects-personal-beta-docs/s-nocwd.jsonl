@@ -1,0 +1,2 @@
+{"type":"user","message":{"role":"user","content":"Write the docs index"},"uuid":"n1","timestamp":"2026-09-05T08:00:00.000Z"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Writing."},{"type":"tool_use","id":"n9","name":"Write","input":{"file_path":"/fx/projects/personal/beta/docs/index.md","content":"x"}}]},"uuid":"n2","timestamp":"2026-09-05T08:00:10.000Z"}

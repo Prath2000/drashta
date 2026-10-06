@@ -1,0 +1,1 @@
+node /Users/alice/projects/personal/shop/web/node_modules/.bin/vite --port 5173

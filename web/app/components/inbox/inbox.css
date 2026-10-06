@@ -1,0 +1,658 @@
+/* Inbox screen (02-ui-spec §7, prototype Inbox.dc.html).
+   Weight 400 and no italics, as everywhere (decision U5). Tokens come from app/styles/app.css. */
+
+.ix-root {
+  container: ix / inline-size;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ground);
+  color: var(--text);
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.ix-root ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ix-root h1 {
+  margin: 0;
+}
+
+/* ---------- shared bits ---------- */
+.ix-head {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.ix-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ix-muted {
+  color: var(--muted);
+}
+.ix-text {
+  color: var(--text);
+}
+.ix-amber {
+  color: var(--amber);
+}
+.ix-ivory {
+  color: var(--ivory);
+}
+.ix-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+.ix-err {
+  font-size: 11px;
+  color: var(--coral);
+}
+.ix-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 6px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  border-radius: 2px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.ix-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--hairline);
+  background: #151513;
+  color: var(--text);
+  border-radius: var(--radius);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.ix-btn-amber {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+.ix-pill {
+  min-height: 36px;
+  padding: 0 12px;
+  background: #151513;
+  color: var(--text);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ix-pill.on {
+  border-color: var(--muted);
+}
+.ix-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  min-height: 0;
+  color: var(--text);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--hairline);
+  text-underline-offset: 3px;
+}
+.ix-more {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+.ix-scroll {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+}
+
+/* ---------- header ---------- */
+.ix-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--panel);
+  flex-shrink: 0;
+}
+.ix-cartouche {
+  border: 1px solid #3a3833;
+  padding: 3px;
+  flex: none;
+}
+.ix-cartouche > div {
+  border: 1px solid var(--hairline);
+  padding: 7px 14px;
+}
+.ix-title {
+  font-size: 20px;
+  line-height: 1.1;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+.ix-sub {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ix-spacer {
+  flex: 1;
+}
+.ix-asof {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ix-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ---------- notes (left) ---------- */
+.ix-notes {
+  width: 44%;
+  min-width: 360px;
+  max-width: 580px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+}
+.ix-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+.ix-seg {
+  display: flex;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+.ix-seg-btn {
+  height: 36px;
+  padding: 0 12px;
+  border: 0;
+  border-right: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ix-seg-btn:last-child {
+  border-right: 0;
+}
+.ix-seg-btn.on {
+  background: var(--raised);
+  color: var(--ivory);
+  box-shadow: inset 0 -2px 0 var(--amber);
+}
+.ix-count {
+  font-size: 10px;
+  padding: 1px 5px;
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  color: var(--muted);
+}
+.ix-seg-btn.on .ix-count {
+  color: var(--amber);
+}
+
+.ix-empty {
+  padding: 40px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.ix-empty-title {
+  font-size: 16px;
+  color: var(--ivory);
+}
+.ix-empty-help {
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.ix-note {
+  display: flex;
+  border-bottom: 1px solid var(--hairline);
+}
+.ix-note-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 8px 12px 16px;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-size: 12px;
+  text-align: left;
+}
+.ix-note-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  width: 100%;
+}
+.ix-state {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--amber);
+}
+.ix-state.done {
+  background: transparent;
+  border: 1px solid var(--dim);
+}
+.ix-note-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+.ix-note-where {
+  color: var(--muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+.ix-note-text {
+  line-height: 1.55;
+  font-size: 13px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.ix-note-text.done {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.ix-note-act {
+  padding: 12px 16px 12px 0;
+  flex-shrink: 0;
+}
+.ix-toggle {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius);
+  background: #151513;
+  border: 1px solid var(--hairline);
+  color: var(--teal);
+  font-size: 11px;
+}
+.ix-toggle.reopen {
+  color: var(--muted);
+}
+
+/* ---------- right column ---------- */
+.ix-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* On a short window the whole column scrolls, so "Needs you" is never cut off. */
+  overflow-y: auto;
+}
+.ix-activity-scroll {
+  flex: 1 0 220px;
+}
+
+.ix-needs {
+  padding: 14px 20px 16px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+.ix-needs-head {
+  margin-bottom: 10px;
+}
+.ix-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+.ix-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 10px 12px;
+  min-height: 44px;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  text-align: left;
+  color: var(--text);
+}
+.ix-tile:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.ix-tile-num {
+  font-size: 24px;
+  line-height: 1;
+}
+.ix-tile-label {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.ix-tile-cta {
+  font-size: 11px;
+  color: var(--text);
+}
+.ix-nothing {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.ix-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  align-items: center;
+}
+.ix-props {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.ix-prop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  min-height: 36px;
+  padding: 4px 4px 4px 12px;
+  background: #151513;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  font-size: 11px;
+}
+.ix-prop-text {
+  flex: 1 1 240px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ix-prop-act {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ix-file {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+.ix-thumb {
+  width: 96px;
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid var(--hairline);
+  background: var(--ground);
+  flex-shrink: 0;
+}
+.ix-file-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ix-file-title {
+  overflow-wrap: anywhere;
+}
+.ix-file-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.ix-select {
+  min-height: 36px;
+  min-width: 0;
+  max-width: 100%;
+  flex: 1 1 200px;
+  padding: 0 8px;
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  font-size: 11px;
+}
+
+/* ---------- activity ---------- */
+.ix-activity-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--panel);
+  flex-shrink: 0;
+}
+.ix-kinds {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ix-kind {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--hairline);
+}
+.ix-kind.on {
+  background: var(--raised);
+  color: var(--ivory);
+  border-color: var(--muted);
+}
+.ix-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.ix-none {
+  padding: 40px;
+  text-align: center;
+  color: var(--muted);
+}
+.ix-day {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: var(--ground);
+  border-bottom: 1px solid var(--hairline);
+  font-size: 11px;
+}
+.ix-day-label {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+.ix-day-sub {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ix-day-rule {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, #2c2b27 0 1px, transparent 1px 8px);
+}
+.ix-event {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 20px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--raised);
+  color: var(--text);
+  font-size: 12px;
+  text-align: left;
+}
+.ix-event-time {
+  width: 44px;
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 11px;
+  padding-top: 1px;
+}
+.ix-tick {
+  width: 2px;
+  height: 14px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.ix-event-kind {
+  width: 74px;
+  flex-shrink: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+.ix-event-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ix-event-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ix-event-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.ix-event-sub {
+  font-size: 11px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ix-event-proj {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- narrow section (viewport drawer open, small window) ----------
+   The prototype puts the two columns side by side. When the section is too
+   narrow for that, the columns stack so nothing is squeezed to a sliver. */
+@container ix (max-width: 780px) {
+  .ix-main {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .ix-notes {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    flex: 0 0 auto;
+    max-height: 320px;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .ix-right {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+  .ix-activity-scroll {
+    flex: 0 0 auto;
+    max-height: 420px;
+  }
+  .ix-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ix-sub {
+    display: none;
+  }
+  .ix-activity-head {
+    flex-wrap: wrap;
+    padding: 8px 12px;
+  }
+  .ix-event {
+    padding: 9px 12px;
+  }
+  .ix-event-kind {
+    width: 62px;
+  }
+  .ix-event-proj {
+    display: none;
+  }
+  .ix-day {
+    padding: 8px 12px;
+  }
+}

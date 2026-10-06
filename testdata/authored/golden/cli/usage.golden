@@ -1,0 +1,171 @@
+$ drashta 
+exit: 2
+--- stdout
+--- stderr
+usage: drashta <task|note|snap> ...
+
+$ drashta bogus
+exit: 2
+--- stdout
+--- stderr
+drashta: unknown command "bogus"
+run 'drashta --help' to see the commands
+
+$ drashta help
+exit: 0
+--- stdout
+usage: drashta <command> ...
+
+Tasks
+  drashta task new <title> [--feature F-3] [--status todo] [--assignee name] [--body text] [--link ref]... [-q]
+  drashta task list [--status review] [--feature F-1] [--json]
+  drashta task show <T-id> [--json]
+  drashta task status <T-id> <backlog|todo|in_progress|review|done> [--user-said-done]
+  drashta task link <T-id> <ref>
+
+Notes
+  drashta note add <ref|id> <text> [--x 0.46 --y 0.2] [--line 30] [--reply-to N-1] [-q]
+  drashta note list [--ref ref] [--all] [--json]
+  drashta note resolve <N-id>
+
+Snapshots
+  drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+  drashta snap list [--task T-12] [--json]
+
+Options (any command)
+  -C, --project dir   the project folder (default: found by walking up from here)
+  --author name       who is acting (default: $DRASHTA_AUTHOR, else Claude)
+  -h, --help          show this help
+
+A ref looks like commit:abc1234, file:src/x.go#L40, server:8090, task:T-12, snapshot:T-12/v3.
+A bare id (T-12, F-3, M-1, N-40, T-12/v3) works as a ref too.
+A text that starts with a dash needs "--" before it.
+
+$ drashta --help
+exit: 0
+--- stdout
+usage: drashta <command> ...
+
+Tasks
+  drashta task new <title> [--feature F-3] [--status todo] [--assignee name] [--body text] [--link ref]... [-q]
+  drashta task list [--status review] [--feature F-1] [--json]
+  drashta task show <T-id> [--json]
+  drashta task status <T-id> <backlog|todo|in_progress|review|done> [--user-said-done]
+  drashta task link <T-id> <ref>
+
+Notes
+  drashta note add <ref|id> <text> [--x 0.46 --y 0.2] [--line 30] [--reply-to N-1] [-q]
+  drashta note list [--ref ref] [--all] [--json]
+  drashta note resolve <N-id>
+
+Snapshots
+  drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+  drashta snap list [--task T-12] [--json]
+
+Options (any command)
+  -C, --project dir   the project folder (default: found by walking up from here)
+  --author name       who is acting (default: $DRASHTA_AUTHOR, else Claude)
+  -h, --help          show this help
+
+A ref looks like commit:abc1234, file:src/x.go#L40, server:8090, task:T-12, snapshot:T-12/v3.
+A bare id (T-12, F-3, M-1, N-40, T-12/v3) works as a ref too.
+A text that starts with a dash needs "--" before it.
+
+$ drashta task
+exit: 2
+--- stdout
+--- stderr
+usage: drashta task <link|list|new|show|status>
+
+$ drashta task bogus
+exit: 2
+--- stdout
+--- stderr
+drashta: unknown command "task bogus" (use one of: link, list, new, show, status)
+run 'drashta --help' to see the commands
+
+$ drashta task --help
+exit: 0
+--- stdout
+usage: drashta <command> ...
+
+Tasks
+  drashta task new <title> [--feature F-3] [--status todo] [--assignee name] [--body text] [--link ref]... [-q]
+  drashta task list [--status review] [--feature F-1] [--json]
+  drashta task show <T-id> [--json]
+  drashta task status <T-id> <backlog|todo|in_progress|review|done> [--user-said-done]
+  drashta task link <T-id> <ref>
+
+Notes
+  drashta note add <ref|id> <text> [--x 0.46 --y 0.2] [--line 30] [--reply-to N-1] [-q]
+  drashta note list [--ref ref] [--all] [--json]
+  drashta note resolve <N-id>
+
+Snapshots
+  drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+  drashta snap list [--task T-12] [--json]
+
+Options (any command)
+  -C, --project dir   the project folder (default: found by walking up from here)
+  --author name       who is acting (default: $DRASHTA_AUTHOR, else Claude)
+  -h, --help          show this help
+
+A ref looks like commit:abc1234, file:src/x.go#L40, server:8090, task:T-12, snapshot:T-12/v3.
+A bare id (T-12, F-3, M-1, N-40, T-12/v3) works as a ref too.
+A text that starts with a dash needs "--" before it.
+
+$ drashta note
+exit: 2
+--- stdout
+--- stderr
+usage: drashta note <add|list|resolve>
+
+$ drashta snap bogus
+exit: 2
+--- stdout
+--- stderr
+drashta: unknown command "snap bogus" (use one of: add, list)
+run 'drashta --help' to see the commands
+
+$ drashta task list --nope
+exit: 2
+--- stdout
+--- stderr
+drashta: unknown option --nope
+run 'drashta --help' to see the commands
+
+$ drashta task list -z
+exit: 2
+--- stdout
+--- stderr
+drashta: unknown option -z
+run 'drashta --help' to see the commands
+
+$ drashta task new x --feature
+exit: 2
+--- stdout
+--- stderr
+drashta: option --feature needs a value
+run 'drashta --help' to see the commands
+
+$ drashta task new x --project
+exit: 2
+--- stdout
+--- stderr
+drashta: option --project needs a value
+run 'drashta --help' to see the commands
+
+$ drashta task list --json=yes
+exit: 2
+--- stdout
+--- stderr
+drashta: option --json does not take a value
+run 'drashta --help' to see the commands
+
+$ drashta task new x --author 'two words'
+exit: 2
+--- stdout
+--- stderr
+drashta: author "two words" must be one word, for example alice, Claude or session:<uuid>
+run 'drashta --help' to see the commands
+

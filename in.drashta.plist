@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template: `make service` fills @BIN@ (installed binary), @BINDIR@ and @HOME@ with sed. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key><string>in.drashta</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@BIN@</string>
+		<string>-port</string>
+		<string>4455</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>@BINDIR@:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<key>RunAtLoad</key><true/>
+	<key>KeepAlive</key><true/>
+	<key>ProcessType</key><string>Interactive</string>
+	<key>SoftResourceLimits</key>
+	<dict>
+		<key>NumberOfFiles</key><integer>4096</integer>
+	</dict>
+	<!-- Files the service creates are private (umask 077 = decimal 63). -->
+	<key>Umask</key><integer>63</integer>
+	<!-- stdout/stderr (panic traces) go to launchd.log. drashta writes and rotates drashta.log
+	     itself, so launchd must not hold that file open (a rotation would strand it). -->
+	<key>StandardOutPath</key><string>@HOME@/.drashta/launchd.log</string>
+	<key>StandardErrorPath</key><string>@HOME@/.drashta/launchd.log</string>
+</dict>
+</plist>

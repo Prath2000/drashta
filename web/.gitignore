@@ -1,0 +1,8 @@
+node_modules/
+/.react-router/
+/build/*
+!/build/client/
+/build/client/*
+!/build/client/.keep
+/test-results/
+/playwright-report/

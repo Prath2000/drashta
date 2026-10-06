@@ -1,0 +1,180 @@
+/* DWG drawing preview (DwgBody). Uses the viewport tokens; weight 400, no italics. */
+
+/* The host is the size container: the rail follows the width of the drawer body, not the window. */
+.vp-cad-host {
+  container-type: inline-size;
+  min-width: 0;
+}
+.vp-cad {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.vp-cad-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* The canvas fills the frame; the engine reads the frame's size (ResizeObserver) and
+   draws its own crosshair, so the pointer itself is hidden. */
+.vp-cad-frame {
+  --vp-stage: #0e0e0d; /* the stage behind a drawing or a model; the 3D frame declares the same value */
+  position: relative;
+  height: min(70vh, 640px);
+  min-height: 240px;
+  background: var(--vp-stage);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.vp-cad-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: none;
+  touch-action: none;
+}
+/* Same veil as .vp-model-loading (3D); the loading text is the shared Loading line. */
+.vp-cad-veil {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.vp-cad-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.vp-cad-status {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ---------- layer rail ---------- */
+.vp-cad-rail {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-height: 220px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--ground);
+  overflow: hidden;
+}
+.vp-cad-rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px 6px 10px;
+  border-bottom: 1px solid var(--hairline);
+}
+.vp-cad-rail-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+}
+.vp-cad-layer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 3px 10px;
+  border: 0;
+  border-bottom: 1px solid var(--hairline-faint);
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--text);
+  font-size: 11px;
+  text-align: left;
+  width: 100%;
+}
+.vp-cad-layer:hover {
+  background: var(--raised);
+}
+.vp-cad-layer[aria-pressed="false"] {
+  color: var(--dim);
+}
+.vp-cad-layer[aria-pressed="false"] .name {
+  text-decoration: line-through;
+}
+.vp-cad-layer[aria-pressed="false"] .swatch {
+  opacity: 0.35;
+}
+.vp-cad-layer[data-solo="true"] {
+  border-left-color: var(--amber);
+  background: var(--select);
+}
+.vp-cad-layer .swatch {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+}
+.vp-cad-layer .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vp-cad-layer .n {
+  flex: none;
+  color: var(--dim);
+}
+
+/* Body wide enough (the drawer's width, not the window's): the rail sits on the right, as tall as
+   the canvas. Narrower: it stays under the canvas. */
+@container (min-width: 720px) {
+  .vp-cad.has-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    align-items: start;
+  }
+  .vp-cad-rail {
+    max-height: min(70vh, 640px);
+  }
+}
+
+.vp-cad-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Full window (useFullWindow): the host is fixed to the window; the drawing takes all the height.
+   The host is still the size container, so a wide window puts the rail on the right. */
+.vp-cad-host.vp-stage-full .vp-cad,
+.vp-cad-host.vp-stage-full .vp-cad-main {
+  flex: 1;
+  min-height: 0;
+}
+.vp-cad-host.vp-stage-full .vp-cad-frame {
+  flex: 1;
+  height: auto;
+}
+@container (min-width: 720px) {
+  .vp-cad-host.vp-stage-full .vp-cad.has-rail {
+    align-items: stretch;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .vp-cad-host.vp-stage-full .vp-cad-rail {
+    max-height: none;
+  }
+}

@@ -1,0 +1,135 @@
+$ drashta snap add --task T-3 --path dome.png --note 'First pass of the tokens.'
+exit: 0
+--- stdout
+T-3/v1 added: .drashta/snapshots/T-3/v1.png
+T-3 in_progress -> review
+
+=== .drashta/snapshots/T-3/v1.md
+---
+task: T-3
+version: 1
+title: Dark palette tokens
+image: v1.png
+source: file:shots/dome.png
+captured: 2026-10-01T10:00:00+05:30
+author: Claude
+verdict: pending
+reviewed_by: ""
+reviewed_at: ""
+review_note: ""
+---
+First pass of the tokens.
+
+=== .drashta/tasks/T-3.md
+---
+id: T-3
+title: Dark palette tokens
+status: review
+feature: F-2
+assignee: alice
+created: 2026-09-28T09:30:00+05:30
+created_by: alice
+updated: 2026-10-01T10:00:00+05:30
+links: []
+unlinks: []
+---
+Define the colour tokens first. Components come after.
+
+## Log
+- 2026-10-01T10:00+05:30 Claude posted snapshot v1
+
+$ drashta snap add --task T-2 --image <home>/shot.png --title 'Badge, third try' -q
+exit: 0
+--- stdout
+T-2/v3
+
+=== .drashta/snapshots/T-2/v3.md
+---
+task: T-2
+version: 3
+title: Badge, third try
+image: v3.png
+source: upload
+captured: 2026-10-01T10:00:00+05:30
+author: Claude
+verdict: pending
+reviewed_by: ""
+reviewed_at: ""
+review_note: ""
+---
+
+$ drashta snap list
+exit: 0
+--- stdout
+ID      VERDICT   AUTHOR  CAPTURED                   TITLE
+T-1/v1  approved  asha    2026-09-25T15:00:00+05:30  Offline banner
+T-2/v1  changes   Claude  2026-09-28T16:00:00+05:30  Sync badge
+T-2/v2  pending   Claude  2026-09-30T12:02:00+05:30  Sync badge
+T-2/v3  pending   Claude  2026-10-01T10:00:00+05:30  Badge, third try
+T-3/v1  pending   Claude  2026-10-01T10:00:00+05:30  Dark palette tokens
+
+$ drashta snap list --task T-3
+exit: 0
+--- stdout
+ID      VERDICT  AUTHOR  CAPTURED                   TITLE
+T-3/v1  pending  Claude  2026-10-01T10:00:00+05:30  Dark palette tokens
+
+$ drashta snap list --task T-5
+exit: 0
+--- stdout
+no snapshots
+
+$ drashta snap add --task T-3 --path <home>/shot.png
+exit: 1
+--- stdout
+--- stderr
+drashta: --path <home>/shot.png: pathguard: path is outside the allowed roots (it must be a file inside the project)
+
+$ drashta snap add --task T-3 --image notes.txt
+exit: 1
+--- stdout
+--- stderr
+drashta: authored: image extension not allowed: "txt" (allowed: png, jpg, jpeg, webp, gif)
+
+$ drashta snap add --task T-3 --image missing.png
+exit: 1
+--- stdout
+--- stderr
+drashta: --image missing.png: lstat <root>/shots/missing.png: no such file or directory
+
+$ drashta snap add --task T-99 --image dome.png
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta snap add --task ../x --image dome.png
+exit: 1
+--- stdout
+--- stderr
+drashta: task ../x: authored: invalid value: task id "../x" is not in the right form
+
+$ drashta snap add --task T-3 --url http://localhost:5173
+exit: 1
+--- stdout
+--- stderr
+drashta: capturing a snapshot from a URL is not built yet (decision A3); take a screenshot and use --image or --path
+
+$ drashta snap add --task T-3
+exit: 2
+--- stdout
+--- stderr
+usage: drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+
+$ drashta snap add --image dome.png
+exit: 2
+--- stdout
+--- stderr
+usage: drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+
+$ drashta snap add --task T-3 --image dome.png --path dome.png
+exit: 2
+--- stdout
+--- stderr
+usage: drashta snap add --task T-12 (--image file | --path file) [--title text] [--note text] [-q]
+

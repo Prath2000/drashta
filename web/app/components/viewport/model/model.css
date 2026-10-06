@@ -1,0 +1,132 @@
+/* 3D model preview (ModelBody). Uses the viewport tokens; weight 400, no italics. */
+
+.vp-model-frame {
+  --vp-stage: #0e0e0d; /* the stage behind a drawing or a model; the DWG frame declares the same value */
+  position: relative;
+  height: min(70vh, 640px);
+  min-height: 240px;
+  background: var(--vp-stage);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.vp-model-canvas {
+  position: absolute;
+  inset: 0;
+}
+.vp-model-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  touch-action: none;
+}
+/* Same veil as .vp-cad-veil (DWG); the text itself is the shared Loading line. */
+.vp-model-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: center;
+  pointer-events: none;
+}
+.vp-model-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.vp-model-stats {
+  color: var(--muted);
+  font-size: 11px;
+  margin-right: auto;
+}
+.vp-model-bar .vp-btn[aria-pressed="true"] {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+/* The stage holds the frame and its bar; it is the element that goes full window. */
+.vp-model-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.vp-model-stage.vp-stage-full {
+  gap: 8px;
+}
+.vp-model-stage.vp-stage-full .vp-model-frame {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+/* Polycount panel (the Polycount button under the frame). */
+.vp-polycount {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 11px;
+}
+.vp-polycount-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 0;
+}
+.vp-polycount-totals dt {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.vp-polycount-totals dd {
+  margin: 2px 0 0;
+  color: var(--text);
+  font-size: 13px;
+}
+.vp-polycount-parts {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.vp-polycount-parts th {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.vp-polycount-parts td {
+  text-align: right;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--hairline-faint);
+  color: var(--text);
+}
+.vp-polycount-parts th:first-child,
+.vp-polycount-parts td:first-child {
+  width: 46%;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vp-polycount-parts tr.rest td {
+  color: var(--dim);
+}
+/* Full window: the panel scrolls under the frame and never takes more than a third of the height. */
+.vp-model-stage.vp-stage-full .vp-polycount {
+  max-height: 33vh;
+  overflow: auto;
+  flex: none;
+}

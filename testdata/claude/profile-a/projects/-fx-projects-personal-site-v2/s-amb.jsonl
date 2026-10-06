@@ -1,0 +1,2 @@
+{"type":"user","message":{"role":"user","content":"Which portfolio is this, nobody knows"},"uuid":"p1","timestamp":"2026-09-03T08:00:00.000Z"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Unknown."}]},"uuid":"p2","timestamp":"2026-09-03T08:00:30.000Z"}

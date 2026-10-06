@@ -1,0 +1,94 @@
+$ drashta task new 'Add export to CSV' --feature F-1 --assignee asha --body 'Export the visible rows.' --link commit:abc1234 --link T-3
+exit: 0
+--- stdout
+created T-6 (todo): Add export to CSV
+
+=== .drashta/tasks/T-6.md
+---
+id: T-6
+title: Add export to CSV
+status: todo
+feature: F-1
+assignee: asha
+created: 2026-10-01T10:00:00+05:30
+created_by: Claude
+updated: 2026-10-01T10:00:00+05:30
+links:
+  - commit:abc1234
+  - task:T-3
+unlinks: []
+---
+Export the visible rows.
+
+$ drashta task new 'Quiet one' -q
+exit: 0
+--- stdout
+T-7
+
+$ drashta task new Words without quotes --status backlog
+exit: 0
+--- stdout
+created T-8 (backlog): Words without quotes
+
+$ drashta task new --feature F-1
+exit: 2
+--- stdout
+--- stderr
+usage: drashta task new <title> [--feature F-3] [--status todo] [--assignee name] [--body text] [--link ref]... [-q]
+
+$ drashta task new 'Bad feature' --feature F-9
+exit: 1
+--- stdout
+--- stderr
+drashta: feature F-9: not found
+
+$ drashta task new 'Bad status' --status parked
+exit: 2
+--- stdout
+--- stderr
+drashta: status "parked" is not one of: backlog, todo, in_progress, review, done
+run 'drashta --help' to see the commands
+
+$ drashta task new 'Bad link' --link commit:xyz
+exit: 1
+--- stdout
+--- stderr
+drashta: authored: invalid value: ref "commit:xyz": commit id must be 6 to 64 hex characters
+
+$ drashta task new 'Missing link target' --link T-99
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta task new 'Claude wants done' --status done
+exit: 1
+--- stdout
+--- stderr
+drashta: Claude may not set a task to done unless the user said so; ask the user, then add --user-said-done
+
+$ drashta task new 'User said done' --status done --user-said-done
+exit: 0
+--- stdout
+created T-9 (done): User said done
+
+$ drashta task new -q -- '-starts with a dash'
+exit: 0
+--- stdout
+T-10
+
+$ drashta task list
+exit: 0
+--- stdout
+ID    STATUS       FEATURE  TITLE
+T-1   done         F-1      Cache layer for notes
+T-2   review       F-1      Sync status badge: show when notes are waiting to upload
+T-3   in_progress  F-2      Dark palette tokens
+T-4   todo         F-3      Search index spike
+T-5   backlog      -        Write release notes
+T-6   todo         F-1      Add export to CSV
+T-7   todo         -        Quiet one
+T-8   backlog      -        Words without quotes
+T-9   done         -        User said done
+T-10  todo         -        -starts with a dash
+

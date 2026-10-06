@@ -1,0 +1,9 @@
+COMMAND     PID  USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ControlCe   612 alice    8u  IPv4 0x1a2b3c4d5e6f7081      0t0  TCP *:7000 (LISTEN)
+ControlCe   612 alice    9u  IPv6 0x1a2b3c4d5e6f7082      0t0  TCP *:7000 (LISTEN)
+ollama      904 alice    3u  IPv4 0x1a2b3c4d5e6f7083      0t0  TCP 127.0.0.1:11434 (LISTEN)
+node      51234 alice   23u  IPv6 0x1a2b3c4d5e6f7084      0t0  TCP [::1]:5173 (LISTEN)
+node      51234 alice   24u  IPv4 0x1a2b3c4d5e6f7085      0t0  TCP 127.0.0.1:3000 (LISTEN)
+node      51234 alice   25u  IPv6 0x1a2b3c4d5e6f7086      0t0  TCP [::1]:3000 (LISTEN)
+python3.1 61001 alice    4u  IPv4 0x1a2b3c4d5e6f7087      0t0  TCP 127.0.0.1:8090 (LISTEN)
+drashta   70000 alice    5u  IPv4 0x1a2b3c4d5e6f7088      0t0  TCP 127.0.0.1:4455 (LISTEN)

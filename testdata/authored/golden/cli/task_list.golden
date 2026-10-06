@@ -1,0 +1,41 @@
+$ drashta task list
+exit: 0
+--- stdout
+ID   STATUS       FEATURE  TITLE
+T-1  done         F-1      Cache layer for notes
+T-2  review       F-1      Sync status badge: show when notes are waiting to upload
+T-3  in_progress  F-2      Dark palette tokens
+T-4  todo         F-3      Search index spike
+T-5  backlog      -        Write release notes
+
+$ drashta task list --status review
+exit: 0
+--- stdout
+ID   STATUS  FEATURE  TITLE
+T-2  review  F-1      Sync status badge: show when notes are waiting to upload
+
+$ drashta task list --feature F-1
+exit: 0
+--- stdout
+ID   STATUS  FEATURE  TITLE
+T-1  done    F-1      Cache layer for notes
+T-2  review  F-1      Sync status badge: show when notes are waiting to upload
+
+$ drashta task list --status done --feature F-3
+exit: 0
+--- stdout
+no tasks
+
+$ drashta task list --status banana
+exit: 2
+--- stdout
+--- stderr
+drashta: status "banana" is not one of: backlog, todo, in_progress, review, done
+run 'drashta --help' to see the commands
+
+$ drashta task list extra
+exit: 2
+--- stdout
+--- stderr
+usage: drashta task list [--status review] [--feature F-1] [--json]
+

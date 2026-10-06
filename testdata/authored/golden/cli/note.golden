@@ -1,0 +1,203 @@
+$ drashta note add T-3 'Which colour space do the tokens use?'
+exit: 0
+--- stdout
+created N-4 on task:T-3
+
+=== .drashta/notes/N-4.md
+---
+id: N-4
+ref: task:T-3
+author: Claude
+created: 2026-10-01T10:00:00+05:30
+resolved: false
+---
+Which colour space do the tokens use?
+
+$ drashta note add snapshot:T-2/v2 'Pulse is too fast.' --x 0.5 --y 0.9
+exit: 0
+--- stdout
+created N-5 on snapshot:T-2/v2
+
+=== .drashta/notes/N-5.md
+---
+id: N-5
+ref: snapshot:T-2/v2
+x: 0.5
+y: 0.9
+author: Claude
+created: 2026-10-01T10:00:00+05:30
+resolved: false
+---
+Pulse is too fast.
+
+$ drashta note add file:src/ui/Badge.tsx#L4 'Magic number.' --reply-to N-2 -q
+exit: 0
+--- stdout
+N-6
+
+=== .drashta/notes/N-6.md
+---
+id: N-6
+ref: file:src/ui/Badge.tsx#L4
+line: 4
+anchor: const size = 8;
+author: Claude
+created: 2026-10-01T10:00:00+05:30
+resolved: false
+reply_to: N-2
+---
+Magic number.
+
+$ drashta note add image:shots/a.png#x=0.25,y=0.75 'Pin from the ref.'
+exit: 0
+--- stdout
+created N-7 on image:shots/a.png#x=0.25,y=0.75
+
+=== .drashta/notes/N-7.md
+---
+id: N-7
+ref: image:shots/a.png#x=0.25,y=0.75
+x: 0.25
+y: 0.75
+author: Claude
+created: 2026-10-01T10:00:00+05:30
+resolved: false
+---
+Pin from the ref.
+
+$ drashta note add T-3
+exit: 2
+--- stdout
+--- stderr
+usage: drashta note add <ref|id> <text> [--x 0.46 --y 0.2] [--line 30] [--reply-to N-1] [-q]
+
+$ drashta note add T-99 'No such task.'
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta note add T-3 'Half a pin.' --x 0.5
+exit: 2
+--- stdout
+--- stderr
+drashta: a pin needs both --x and --y
+run 'drashta --help' to see the commands
+
+$ drashta note add T-3 'Pin out of range.' --x 2 --y 0.5
+exit: 2
+--- stdout
+--- stderr
+drashta: --x and --y must be between 0 and 1
+run 'drashta --help' to see the commands
+
+$ drashta note add T-3 'Bad reply.' --reply-to N-99
+exit: 1
+--- stdout
+--- stderr
+drashta: note N-99: not found
+
+$ drashta note add bogus 'Bad ref.'
+exit: 1
+--- stdout
+--- stderr
+drashta: authored: invalid value: ref "bogus" needs the form type:id
+
+$ drashta note list
+exit: 0
+--- stdout
+ID   STATE  AUTHOR  REF                              TEXT
+N-2  open   alice   file:src/ui/Badge.tsx#L20        Why 8? Use the spacing token.
+N-3  open   Claude  task:T-2                         Checked: the spacing token is 12. I will switch to it.
+N-4  open   Claude  task:T-3                         Which colour space do the tokens use?
+N-5  open   Claude  snapshot:T-2/v2                  Pulse is too fast.
+N-6  open   Claude  file:src/ui/Badge.tsx#L4         Magic number.
+N-7  open   Claude  image:shots/a.png#x=0.25,y=0.75  Pin from the ref.
+
+$ drashta note list --all
+exit: 0
+--- stdout
+ID   STATE     AUTHOR  REF                              TEXT
+N-1  resolved  alice   snapshot:T-2/v1                  The count is too small to read.
+N-2  open      alice   file:src/ui/Badge.tsx#L20        Why 8? Use the spacing token.
+N-3  open      Claude  task:T-2                         Checked: the spacing token is 12. I will switch to it.
+N-4  open      Claude  task:T-3                         Which colour space do the tokens use?
+N-5  open      Claude  snapshot:T-2/v2                  Pulse is too fast.
+N-6  open      Claude  file:src/ui/Badge.tsx#L4         Magic number.
+N-7  open      Claude  image:shots/a.png#x=0.25,y=0.75  Pin from the ref.
+
+$ drashta note list --ref T-3
+exit: 0
+--- stdout
+ID   STATE  AUTHOR  REF       TEXT
+N-4  open   Claude  task:T-3  Which colour space do the tokens use?
+
+$ drashta note list --ref snapshot:T-2/v1 --all
+exit: 0
+--- stdout
+ID   STATE     AUTHOR  REF              TEXT
+N-1  resolved  alice   snapshot:T-2/v1  The count is too small to read.
+
+$ drashta note resolve N-2
+exit: 0
+--- stdout
+resolved N-2
+
+=== .drashta/notes/N-2.md
+---
+id: N-2
+ref: file:src/ui/Badge.tsx#L20
+line: 20
+anchor: "const size = 8;"
+author: alice
+created: 2026-09-30T13:00:00+05:30
+resolved: true
+resolved_by: Claude
+resolved_at: 2026-10-01T10:00:00+05:30
+---
+Why 8? Use the spacing token.
+
+$ drashta note resolve N-2
+exit: 0
+--- stdout
+N-2 is already resolved
+
+$ drashta note resolve N-99
+exit: 1
+--- stdout
+--- stderr
+drashta: note N-99: not found
+
+$ drashta note resolve
+exit: 2
+--- stdout
+--- stderr
+usage: drashta note resolve <N-id>
+
+$ drashta task show T-2
+exit: 0
+--- stdout
+T-2  Sync status badge: show when notes are waiting to upload
+status:    review
+feature:   F-1  Offline sync
+assignee:  alice + Claude
+created:   2026-09-27T10:00:00+05:30 by alice
+updated:   2026-09-30T12:02:00+05:30
+links:
+  file:src/ui/Badge.tsx#L12-L40
+  server:5173
+snapshots:
+  v1  changes   Claude  Sync badge
+  v2  pending   Claude  Sync badge
+notes: 2 open, 1 resolved
+  N-3  Claude  task:T-2  Checked: the spacing token is 12. I will switch to it.
+  N-5  Claude  snapshot:T-2/v2  Pulse is too fast.
+
+The badge sits in the top bar. It shows a count while notes wait.
+
+It must also work in dark mode.
+
+log:
+  2026-09-28T14:10+05:30  Claude  status todo -> in_progress
+  2026-09-30T12:02+05:30  Claude  posted snapshot v2
+

@@ -1,0 +1,78 @@
+$ drashta task status T-3 review
+exit: 0
+--- stdout
+T-3 in_progress -> review
+
+=== .drashta/tasks/T-3.md
+---
+id: T-3
+title: Dark palette tokens
+status: review
+feature: F-2
+assignee: alice
+created: 2026-09-28T09:30:00+05:30
+created_by: alice
+updated: 2026-10-01T10:00:00+05:30
+links: []
+unlinks: []
+---
+Define the colour tokens first. Components come after.
+
+## Log
+- 2026-10-01T10:00+05:30 Claude status in_progress -> review
+
+$ drashta task status T-3 review
+exit: 0
+--- stdout
+T-3 is already review
+
+$ drashta task status T-3 done
+exit: 1
+--- stdout
+--- stderr
+drashta: Claude may not set a task to done unless the user said so; ask the user, then add --user-said-done
+
+$ drashta task status T-3 done --user-said-done
+exit: 0
+--- stdout
+T-3 review -> done
+
+$ drashta task status T-4 done --author alice
+exit: 0
+--- stdout
+T-4 todo -> done
+
+$ drashta task status T-4 parked
+exit: 2
+--- stdout
+--- stderr
+drashta: status "parked" is not one of: backlog, todo, in_progress, review, done
+run 'drashta --help' to see the commands
+
+$ drashta task status T-99 todo
+exit: 1
+--- stdout
+--- stderr
+drashta: task T-99: not found
+
+$ drashta task status T-4
+exit: 2
+--- stdout
+--- stderr
+usage: drashta task status <T-id> <backlog|todo|in_progress|review|done> [--user-said-done]
+
+=== .drashta/tasks/T-4.md
+---
+id: T-4
+title: Search index spike
+status: done
+feature: F-3
+created: 2026-09-29T10:00:00+05:30
+created_by: alice
+updated: 2026-10-01T10:00:00+05:30
+links: []
+unlinks: []
+---
+## Log
+- 2026-10-01T10:00+05:30 alice status todo -> done
+
