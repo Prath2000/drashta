@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -454,7 +455,7 @@ func (r *Resolver) lookupProject(ctx context.Context, it item) (item, error) {
 	it.obj = p
 	it.target.Type = actions.TypeProject
 	it.target.URL = p.Remote // only used by "safari", and only for a GitHub remote
-	it.acts = []actSpec{{actions.ActionFinder, "Reveal in Finder"}, {actions.ActionEditor, "Open in editor"},
+	it.acts = []actSpec{{actions.ActionFinder, revealLabel()}, {actions.ActionEditor, "Open in editor"},
 		{actions.ActionTerminal, "Open in Terminal"}, {actions.ActionSafari, "Open on GitHub"}}
 	return it, nil
 }
@@ -536,12 +537,12 @@ func (r *Resolver) lookupFile(ctx context.Context, it item, root string) (item, 
 	case obj.Dir:
 		it.typ, it.icon = "folder", "folder"
 		it.target.Type = actions.TypeFolder
-		it.acts = []actSpec{{actions.ActionApp, "Open in Finder"}, {actions.ActionTerminal, "Open in Terminal"}}
+		it.acts = []actSpec{{actions.ActionApp, "Open in " + fileManager()}, {actions.ActionTerminal, "Open in Terminal"}}
 	case obj.Kind == tree.KindImage || it.ref.Type == authored.RefImage:
 		it.typ, it.icon = "image", "image"
 		obj.URL = RawURL(it.ref.Project, rel)
 		it.target.Type = actions.TypeImage
-		it.acts = []actSpec{{actions.ActionDefault, "Open in Preview"}, {actions.ActionApp, appLabel}, {actions.ActionFinder, "Reveal in Finder"}}
+		it.acts = []actSpec{{actions.ActionDefault, "Open in Preview"}, {actions.ActionApp, appLabel}, {actions.ActionFinder, revealLabel()}}
 	default:
 		it.typ, it.icon = "file", "file"
 		if obj.Kind == tree.KindDoc {
@@ -549,10 +550,10 @@ func (r *Resolver) lookupFile(ctx context.Context, it item, root string) (item, 
 		}
 		it.target.Type = actions.TypeFile
 		if obj.Kind == tree.KindCode || obj.Kind == tree.KindDoc {
-			it.acts = []actSpec{{actions.ActionEditor, "Open in editor"}, {actions.ActionApp, appLabel}, {actions.ActionFinder, "Reveal in Finder"}}
+			it.acts = []actSpec{{actions.ActionEditor, "Open in editor"}, {actions.ActionApp, appLabel}, {actions.ActionFinder, revealLabel()}}
 		} else {
 			// Media, PDF, office files, archives: the app macOS picks comes first.
-			it.acts = []actSpec{{actions.ActionApp, appLabel}, {actions.ActionEditor, "Open in editor"}, {actions.ActionFinder, "Reveal in Finder"}}
+			it.acts = []actSpec{{actions.ActionApp, appLabel}, {actions.ActionEditor, "Open in editor"}, {actions.ActionFinder, revealLabel()}}
 		}
 	}
 	it.obj = obj
@@ -757,7 +758,7 @@ func (r *Resolver) lookupAuthored(ctx context.Context, it item) (item, error) {
 		it.obj = b.SnapshotView(s)
 		if s.Image != "" {
 			it.target.Type, it.target.Path = actions.TypeSnapshot, s.ImageRel()
-			it.acts = []actSpec{{actions.ActionDefault, "Open in Preview"}, {actions.ActionFinder, "Reveal in Finder"}}
+			it.acts = []actSpec{{actions.ActionDefault, "Open in Preview"}, {actions.ActionFinder, revealLabel()}}
 		} else {
 			it.target.Type, it.target.Path = actions.TypeNote, ".drashta/snapshots/"+s.ID+".md"
 			it.acts = editor
@@ -821,3 +822,13 @@ func firstLine(s string, max int) string {
 	}
 	return ""
 }
+
+// fileManager names the OS file manager for tooltips.
+func fileManager() string {
+	if runtime.GOOS == "windows" {
+		return "Explorer"
+	}
+	return "Finder"
+}
+
+func revealLabel() string { return "Reveal in " + fileManager() }

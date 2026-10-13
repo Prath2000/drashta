@@ -9,7 +9,6 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/Prath2000/drashta/internal/pathguard"
@@ -103,19 +102,19 @@ func lockRoot(root string) (unlock func(), err error) {
 	if err != nil {
 		return nil, err
 	}
-	f, err := os.OpenFile(filepath.Join(dot, ".lock"), os.O_CREATE|os.O_RDWR|syscall.O_NOFOLLOW, 0o644)
+	f, err := openLockFile(filepath.Join(dot, ".lock"))
 	if err != nil {
 		return nil, err
 	}
 	deadline := time.Now().Add(lockWait)
 	for {
-		err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
-		if err == nil {
-			break
-		}
-		if err != syscall.EWOULDBLOCK && err != syscall.EINTR {
+		locked, err := tryLock(f)
+		if err != nil {
 			f.Close()
 			return nil, err
+		}
+		if locked {
+			break
 		}
 		if time.Now().After(deadline) {
 			f.Close()
@@ -124,7 +123,7 @@ func lockRoot(root string) (unlock func(), err error) {
 		time.Sleep(5 * time.Millisecond)
 	}
 	return func() {
-		_ = syscall.Flock(int(f.Fd()), syscall.LOCK_UN)
+		unlockFile(f)
 		_ = f.Close()
 	}, nil
 }

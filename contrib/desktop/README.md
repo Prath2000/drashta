@@ -2,6 +2,8 @@
 
 This is an optional extra. drashta works fully without it.
 
+This folder is for macOS (Plash). On Windows, see [`lively/README.md`](lively/README.md).
+
 ## What it is
 
 - Three exact modes for the drashta wallpaper, driven by keys or by the buttons in drashta's top bar:

@@ -47,6 +47,40 @@ jobs:
         working-directory: web
       # End-to-end tests (npm run e2e) need Playwright browsers and are not run in CI.
 
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build web app
+        run: npm --prefix web ci && npm --prefix web run build
+      - name: go build
+        run: go build ./cmd/drashta
+      - name: go test
+        run: go test ./...
+
+  linux-build:
+    runs-on: ubuntu-latest
+    env:
+      CGO_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Compile check (web app not needed for a build check)
+        run: go build ./... && go vet ./cmd/...
+
   govulncheck:
     runs-on: ubuntu-latest
     steps:

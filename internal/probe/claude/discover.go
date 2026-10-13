@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/Prath2000/drashta/internal/pathguard"
@@ -167,9 +166,7 @@ func statFile(path, profile string) (File, bool) {
 func fileFromInfo(path, profile string, fi os.FileInfo) File {
 	f := File{Path: path, Profile: profile, Size: fi.Size(), MTime: fi.ModTime(),
 		SessionID: strings.TrimSuffix(filepath.Base(path), ".jsonl")}
-	if st, ok := fi.Sys().(*syscall.Stat_t); ok {
-		f.Inode = uint64(st.Ino)
-	}
+	f.Inode = fileInode(fi)
 	return f
 }
 

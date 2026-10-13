@@ -5,11 +5,9 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"os"
 	"path"
 	"path/filepath"
 	"strings"
-	"syscall"
 	"time"
 	"unicode/utf8"
 
@@ -117,7 +115,7 @@ func ReadFile(root, rel string, from, to int) (FileText, error) {
 
 	// Open without following a link at the last step and without blocking on
 	// a pipe. The path is already link-free, so this only guards against a swap.
-	f, err := os.OpenFile(abs, os.O_RDONLY|syscall.O_NOFOLLOW|syscall.O_NONBLOCK, 0)
+	f, err := openNoFollow(abs)
 	if err != nil {
 		return ft, err
 	}
@@ -261,7 +259,7 @@ func RawPath(root, rel string) (abs string, mime string, err error) {
 	if IsSecret(cleanRel(rel)) || IsSecret(abs) {
 		return "", "", ErrSecret
 	}
-	f, err := os.OpenFile(abs, os.O_RDONLY|syscall.O_NOFOLLOW|syscall.O_NONBLOCK, 0)
+	f, err := openNoFollow(abs)
 	if err != nil {
 		return "", "", err
 	}

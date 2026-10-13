@@ -4,9 +4,9 @@ Thanks for helping. This is a small project, so keep changes focused.
 
 ## Setup
 
-- Install Go (version in `go.mod`), Node.js, and `lsof`.
+- Install Go (version in `go.mod`), Node.js, and (on macOS) `lsof`. Windows needs nothing extra (it uses the built-in `netstat`).
 - Clone, then build as described in `README.md` ("Quick start").
-- Use a throwaway data folder for tests and manual runs: `DRASHTA_HOME=$(mktemp -d) ./drashta -port 4467`. Never point a test at your real `~/.drashta`, and check the port is free first (`lsof -nP -iTCP:4467 -sTCP:LISTEN` prints nothing).
+- Use a throwaway data folder for tests and manual runs: `DRASHTA_HOME=$(mktemp -d) ./drashta -port 4467`. Never point a test at your real `~/.drashta`, and check the port is free first (`lsof -nP -iTCP:4467 -sTCP:LISTEN` prints nothing; on Windows, `netstat -ano | findstr :4467` prints nothing). On Windows, set `DRASHTA_HOME` to a temporary folder and run `.\drashta.exe -port 4467`.
 
 ## Checks before a pull request
 

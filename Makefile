@@ -1,5 +1,6 @@
 # drashta Makefile (03-architecture.md section 2, "Makefile targets").
 # `install`, `service` and `unservice` change this Mac (PREFIX, launchd). Run them only on purpose.
+# These targets are macOS-only. On Windows use the plain npm and go build commands from README.md.
 
 BIN        := drashta
 # Install dir: /opt/homebrew/bin when it exists (Apple Silicon Homebrew), else /usr/local/bin.

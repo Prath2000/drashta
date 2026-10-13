@@ -95,34 +95,6 @@ var (
 	appNameRe   = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9 ._-]{0,63}$`)
 )
 
-// terminalScript is the FIXED AppleScript used to run a command in Terminal.
-// argv item 1 is the folder, the rest is the command argv. Every item is
-// shell-quoted with "quoted form of", so no data is ever built into script
-// source and no data is ever parsed by the shell as code.
-var terminalScript = []string{
-	"on run argv",
-	"set cmd to \"cd \" & quoted form of (item 1 of argv) & \" &&\"",
-	"repeat with i from 2 to count of argv",
-	"set cmd to cmd & \" \" & quoted form of (item i of argv)",
-	"end repeat",
-	"tell application \"Terminal\"",
-	"activate",
-	"do script cmd",
-	"end tell",
-	"end run",
-}
-
-// terminalCommand wraps argv to run in a new Terminal window inside dir.
-func terminalCommand(dir string, argv ...string) Command {
-	args := make([]string, 0, 2*len(terminalScript)+2+len(argv))
-	for _, line := range terminalScript {
-		args = append(args, "-e", line)
-	}
-	args = append(args, "--", dir)
-	args = append(args, argv...)
-	return Command{Name: "osascript", Args: args}
-}
-
 // Plan builds the command for action on t with the default Config
 // (no Roots, so every path target is refused). Use Config.Plan in real code.
 func Plan(t Target, action string) (Command, error) {
@@ -188,7 +160,7 @@ func (c Config) Plan(t Target, action string) (Command, error) {
 			if err != nil {
 				return Command{}, err
 			}
-			return Command{Name: "open", Args: []string{"-a", term, p}}, nil
+			return openInTerminalApp(term, p), nil
 		}
 	case TypeImage, TypeSnapshot:
 		switch action {
@@ -197,7 +169,7 @@ func (c Config) Plan(t Target, action string) (Command, error) {
 			if err != nil {
 				return Command{}, err
 			}
-			return Command{Name: "open", Args: []string{"-a", "Preview", p}}, nil
+			return previewCommand(p), nil
 		case ActionFinder:
 			return c.reveal(t)
 		case ActionApp:
@@ -292,7 +264,7 @@ func (c Config) reveal(t Target) (Command, error) {
 	if err != nil {
 		return Command{}, err
 	}
-	return Command{Name: "open", Args: []string{"-R", p}}, nil
+	return revealCommand(p), nil
 }
 
 // defaultApp opens the path with the app macOS picks for it ("--" so a path is never a flag).
@@ -301,7 +273,7 @@ func (c Config) defaultApp(t Target) (Command, error) {
 	if err != nil {
 		return Command{}, err
 	}
-	return Command{Name: "open", Args: []string{"--", p}}, nil
+	return openDefaultCommand(p), nil
 }
 
 func (c Config) terminal() (string, error) {
@@ -476,7 +448,7 @@ func safari(u string) (Command, error) {
 	if err := noDash(u); err != nil {
 		return Command{}, err
 	}
-	return Command{Name: "open", Args: []string{"-a", "Safari", u}}, nil
+	return browserCommand(u), nil
 }
 
 func noDash(s string) error {

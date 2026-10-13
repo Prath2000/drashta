@@ -7,7 +7,7 @@ See all your projects at a glance, or turn the whole thing into a live desktop w
 
 [![CI](https://github.com/Prath2000/drashta/actions/workflows/ci.yml/badge.svg)](https://github.com/Prath2000/drashta/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Platform: macOS | Windows](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey)
 ![Local only](https://img.shields.io/badge/data-stays%20on%20your%20machine-green)
 
 <img src="docs/screenshots/overview.png" alt="drashta overview: one activity lane per project over the last 30 days" width="900">
@@ -52,11 +52,16 @@ drashta has three display modes, switched from the top bar:
 
 <p align="center"><img src="docs/screenshots/wallpaper.png" alt="Wallpaper mode: a quiet read-only readout of project activity" width="760"></p>
 
-On macOS, [Plash](https://sindresorhus.com/plash) turns any web page into your desktop background, and drashta ships a script and optional [Karabiner-Elements](https://karabiner-elements.pqrs.org/) rule to switch modes with a key press. See [`contrib/desktop/`](contrib/desktop/README.md) for the setup. It is optional; the dashboard works fully without it.
+Both tools below are optional; the dashboard works fully without them.
+
+- **macOS: [Plash](https://sindresorhus.com/plash)** turns any web page into your desktop background. drashta ships a script and an optional [Karabiner-Elements](https://karabiner-elements.pqrs.org/) rule to switch modes with a key press. See [`contrib/desktop/`](contrib/desktop/README.md).
+- **Windows (new, early): [Lively Wallpaper](https://github.com/rocksdanister/lively)** can use a web page URL as your wallpaper. See [`contrib/desktop/lively/README.md`](contrib/desktop/lively/README.md). The mode buttons and the Plash script are macOS-only there.
 
 ## Quick start
 
-You need Go (version in `go.mod`) and Node.js (current LTS or newer; the web app is built once).
+You need Go (version in `go.mod`) and Node.js (current LTS or newer; the web app is built once). Windows support is new and early, so expect rough edges.
+
+macOS and Linux:
 
 ```bash
 git clone https://github.com/Prath2000/drashta.git
@@ -67,10 +72,22 @@ go build -o drashta ./cmd/drashta
 ./drashta
 ```
 
+Windows (PowerShell, same steps; the binary is `drashta.exe`):
+
+```powershell
+git clone https://github.com/Prath2000/drashta.git
+cd drashta
+npm --prefix web ci
+npm --prefix web run build
+go build -o drashta.exe ./cmd/drashta
+.\drashta.exe
+```
+
 Open <http://127.0.0.1:4455>.
 
 - `./drashta -port 4467` picks another port.
 - `./drashta -version` prints the version. `./drashta -reindex` rebuilds the cache and exits.
+- The `make` targets are macOS-only. On Windows use the plain commands above (and see the Lively guide to start it at login).
 - `make install` copies the binary to `/opt/homebrew/bin`, and `make service` installs a launchd agent so drashta starts at login. Both change your machine, so read the `Makefile` first.
 
 ## Make it yours
@@ -106,8 +123,8 @@ Set `DRASHTA_HOME` to use another data folder instead of `~/.drashta` (useful fo
 
 ## Requirements
 
-- **macOS** is the main platform. Linux may build and run, but it is not tested.
-- `lsof` finds running dev servers. It ships with macOS.
+- **macOS and Windows** are supported. Windows support is new and early. Linux builds but is untested.
+- Running dev servers are found with `lsof` on macOS (it ships with macOS). Windows needs nothing extra: it uses the built-in `netstat`.
 - Optional:
   - `git` for history and activity.
   - `gh` (GitHub CLI) for GitHub data.

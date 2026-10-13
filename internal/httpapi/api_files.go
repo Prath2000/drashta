@@ -21,10 +21,8 @@ package httpapi
 import (
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 	"strconv"
-	"syscall"
 	"time"
 
 	"github.com/Prath2000/drashta/internal/probe/tree"
@@ -196,7 +194,7 @@ func (a *ProjectAPI) serveRaw(w http.ResponseWriter, r *http.Request, pr pjProje
 		return
 	}
 	// RawPath already checked the file. Open it without following a link at the last step.
-	f, err := os.OpenFile(abs, os.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	f, err := openNoFollow(abs)
 	if err != nil {
 		a.pathError(w, r, err)
 		return
