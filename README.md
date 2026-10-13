@@ -1,37 +1,62 @@
-# drashta
+<div align="center">
 
-A local command center for the projects in your `~/projects` folder.
+# द्रष्टा drashta
 
-- One Go program with a React app embedded in it.
-- It listens on `127.0.0.1:4455` (loopback only) and opens in your browser.
-- It shows your projects, git and fossil activity, Claude Code sessions, running dev servers, and a small per-project task and note tracker.
-- Everything stays on your machine.
+**A local command center for everything you build.**
+See all your projects at a glance, or turn the whole thing into a live desktop wallpaper.
 
-## Screenshots
+[![CI](https://github.com/Prath2000/drashta/actions/workflows/ci.yml/badge.svg)](https://github.com/Prath2000/drashta/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
+![Local only](https://img.shields.io/badge/data-stays%20on%20your%20machine-green)
 
-Screenshots live in `docs/screenshots/`. They have not been captured yet. Planned shots (1440x900):
+<img src="docs/screenshots/overview.png" alt="drashta overview: one activity lane per project over the last 30 days" width="900">
 
-- `docs/screenshots/overview.png`: the main projects view.
-- `docs/screenshots/project.png`: one project open (activity, tasks, notes).
-- `docs/screenshots/sessions.png`: the Claude Code sessions view.
-- `docs/screenshots/servers.png`: the running dev servers view.
-- `docs/screenshots/viewer.png`: a file viewer (PDF, drawing or 3D).
+</div>
 
-Take them from a throwaway instance with invented data, not your real projects (see "Development").
+drashta (Sanskrit for "the one who sees") is a project and production dashboard that runs on your own machine. Point it at the folder where your projects live and it shows what is moving, what is stuck and what is running, with no accounts, no cloud and no setup per project.
 
-## Requirements
+It is a single Go binary with the web app built in. Start it, open a browser tab, done.
 
-- macOS is the main platform. Linux may build and run, but it is not tested.
-- Go: the version in `go.mod` (currently 1.26).
-- Node.js: a current LTS or newer, only needed to build the web app (CI uses the latest 22.x; the author develops on 26).
-- `lsof`: used to find running dev servers. It ships with macOS.
-- Optional:
-  - `git`: without it, git history and activity are missing.
-  - `gh` (GitHub CLI): adds GitHub data. Set `gh_enabled = false` to turn it off. Without `gh`, GitHub panels stay empty.
-  - `chitralipi`: a DWG reader. Without it, a DWG file shows "Open in default app" instead of a preview.
-  - An editor command (default `code -g {path}:{line}`): used by "open in editor".
+## What you get
+
+- **A seismograph of your work.** One lane per project for the last 7 or 30 days: file changes, commits, coding-assistant sessions, live servers and uncommitted work. Quiet projects fade out, busy ones stand out.
+- **Project pages.** Open any project for its activity, files, commits, docs, running servers and sessions, with one-click Editor, Finder, Terminal and Open-in-browser buttons.
+- **A built-in tracker.** Kanban board, milestones and timeline across projects. Tasks and notes are plain Markdown in `<project>/.drashta/`, so they diff and version with your code.
+- **An inbox** for things waiting on your review.
+- **Search** across projects, commits, docs and Claude Code sessions.
+- **File viewers** for PDF, DWG drawings and 3D models, with a full-window mode.
+- **Git and Fossil** history out of the box. Optional GitHub data through the `gh` CLI.
+- **Local and private.** It binds to loopback only, and nothing leaves your machine.
+
+<table>
+  <tr>
+    <td><img src="docs/screenshots/project.png" alt="A project page with activity, files, sessions and servers"></td>
+    <td><img src="docs/screenshots/tracker.png" alt="The tracker board with backlog, to do, in progress, review and done columns"></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Project page</b></td>
+    <td align="center"><b>Tracker</b></td>
+  </tr>
+</table>
+
+## Use it as a wallpaper
+
+drashta has three display modes, switched from the top bar:
+
+| Mode | What it does |
+| --- | --- |
+| **normal** | The regular dashboard in a browser tab. |
+| **wallpaper** | A quiet, read-only readout of your activity. Made to sit behind your windows. |
+| **browse** | The same view on your desktop, but clickable, so you can jump straight into a project. |
+
+<p align="center"><img src="docs/screenshots/wallpaper.png" alt="Wallpaper mode: a quiet read-only readout of project activity" width="760"></p>
+
+On macOS, [Plash](https://sindresorhus.com/plash) turns any web page into your desktop background, and drashta ships a script and optional [Karabiner-Elements](https://karabiner-elements.pqrs.org/) rule to switch modes with a key press. See [`contrib/desktop/`](contrib/desktop/README.md) for the setup. It is optional; the dashboard works fully without it.
 
 ## Quick start
+
+You need Go (version in `go.mod`) and Node.js (current LTS or newer; the web app is built once).
 
 ```bash
 git clone https://github.com/Prath2000/drashta.git
@@ -42,65 +67,74 @@ go build -o drashta ./cmd/drashta
 ./drashta
 ```
 
-Then open <http://127.0.0.1:4455>.
+Open <http://127.0.0.1:4455>.
 
-- Use `./drashta -port 4467` to pick another port.
+- `./drashta -port 4467` picks another port.
 - `./drashta -version` prints the version. `./drashta -reindex` rebuilds the cache and exits.
-- `make install` copies the binary to `/opt/homebrew/bin`, and `make service` installs a macOS launchd agent. Both change your machine, so read the `Makefile` first.
+- `make install` copies the binary to `/opt/homebrew/bin`, and `make service` installs a launchd agent so drashta starts at login. Both change your machine, so read the `Makefile` first.
 
-## Configuration
+## Make it yours
 
-On first start drashta writes `~/.drashta/config.toml`. Changes are picked up when drashta restarts. Keys:
+Nothing assumes a folder layout. On first start drashta finds your projects folder and writes `~/.drashta/config.toml`. Edit it and restart.
 
-- `projects_dir`: the folder that holds your projects (default `~/projects`).
-- `roots`: group folders inside `projects_dir`; each folder inside a group is a project.
-- `hidden`: project folders to hide from the UI (a folder name, `group/folder`, or a project id). They are still found.
+```toml
+projects_dir = "~/code"          # where your projects live (default ~/projects)
+roots = ["work", "personal"]     # group folders inside projects_dir; each folder in a group is a project
+hidden = ["old-experiments"]     # hide from the UI (folder name, group/folder, or project id)
+editor = "code -g {path}:{line}" # command behind "open in editor"
+terminal = "Terminal"            # app behind "open in terminal"
+gh_enabled = true                # allow calls to the gh CLI for GitHub data
+```
+
+<details>
+<summary>All settings</summary>
+
+- `projects_dir`: the folder that holds your projects.
+- `roots`: group folders inside `projects_dir`. When unset, they are discovered from the disk.
+- `hidden`: project folders to hide. They are still found, so you can show them again.
 - `skip`: extra folder names the file-tree walk will not enter.
 - `editor`: the command that opens a file. `{path}` and `{line}` are filled in. Only `config.toml` can set it, never the API.
-- `terminal`: the terminal app used to open a project in a terminal (default `Terminal`).
-- `claude_profiles`: Claude Code profile folders that hold `projects/<folder>/*.jsonl` sessions.
-- `gh_enabled`: `true` or `false`. Allow calls to the `gh` CLI.
-- `desktop_script`: optional script behind the desktop mode buttons. Empty means off. It must be inside `projects_dir`.
+- `terminal`: the terminal app used to open a project.
+- `claude_profiles`: Claude Code profile folders that hold `projects/<folder>/*.jsonl` sessions. Found automatically when unset.
+- `gh_enabled`: allow calls to the `gh` CLI. Without `gh`, GitHub panels stay empty.
+- `desktop_script`: optional script behind the mode buttons. Empty means off. It must be inside `projects_dir`.
 - `chitralipi`: path of the DWG reader program.
 
-Set `DRASHTA_HOME` to use another data folder instead of `~/.drashta` (useful for tests).
+Set `DRASHTA_HOME` to use another data folder instead of `~/.drashta` (useful for trying it out or for tests).
 
-## Where data lives
+</details>
 
-- `~/.drashta/`: the SQLite index (`index.db`), `config.toml`, and logs.
-- `<project>/.drashta/*.md`: per-project tasks and notes. These files are the source of truth and are friendly to git.
-- The SQLite index is a cache plus a history log. Most of it can be rebuilt with `-reindex`, but the activity and server-run history tables cannot, so do not delete them if you want that history.
+## Requirements
 
-## Privacy
+- **macOS** is the main platform. Linux may build and run, but it is not tested.
+- `lsof` finds running dev servers. It ships with macOS.
+- Optional:
+  - `git` for history and activity.
+  - `gh` (GitHub CLI) for GitHub data.
+  - `chitralipi`, a DWG reader. Without it, a DWG file offers "Open in default app" instead of a preview.
 
-- drashta reads Claude Code transcripts: `~/.claude*/projects/*/*.jsonl`.
-- Transcript text is redacted (known secret patterns) before it reaches the index, full-text search or the API.
-- The server binds to loopback only.
-- Nothing is sent anywhere. The one exception is the optional `gh` CLI, which talks to GitHub the way it normally does. Set `gh_enabled = false` to avoid that.
-- Redaction is pattern based. It is a safety net, not a guarantee. Treat `~/.drashta/index.db` as sensitive.
+## Your data
 
-## Threat model
+- `~/.drashta/` holds the SQLite index (`index.db`), `config.toml` and logs.
+- `<project>/.drashta/*.md` holds per-project tasks and notes. These files are the source of truth.
+- The index is a cache plus a history log. `-reindex` rebuilds most of it, but the activity and server-run history cannot be rebuilt, so keep them if you want that history.
 
-- Any process running under your user account is trusted. It can already read your files, so drashta does not try to defend against it.
-- The goal is to stop web pages in your browser from talking to the local server. drashta does this with:
-  - `Host`, `Origin` and `Sec-Fetch-Site` checks on requests;
-  - a token sent in the `X-Drashta-Token` header on every mutating call. The token is embedded in `index.html` when the page is served.
-- Anything that runs a command goes through a no-shell runner and path checks. The editor command is set only in `config.toml`.
-- Do not expose the port to a network (no reverse proxy, no port forwarding).
+## Privacy and security
 
-See `SECURITY.md` for how to report a problem.
+- Everything stays on your machine. The one exception is the optional `gh` CLI, which talks to GitHub the way it normally does. Set `gh_enabled = false` to avoid that.
+- drashta reads Claude Code session transcripts (`~/.claude*/projects/*/*.jsonl`) for the sessions view. Known secret patterns are redacted before text reaches the index, search or the API. Redaction is pattern based, so treat `~/.drashta/index.db` as sensitive.
+- The server binds to loopback and checks `Host`, `Origin` and `Sec-Fetch-Site` on requests. Every mutating call needs a per-page token. This keeps other web pages in your browser from talking to it.
+- Anything that runs a command goes through a no-shell runner with path checks.
+- It is a single-user tool with no login. Do not expose the port to a network (no reverse proxy, no port forwarding).
+
+To report a vulnerability, see [`SECURITY.md`](SECURITY.md).
 
 ## Limitations
 
-- Built and used mainly on macOS.
-- It is a single-user, single-machine tool. There is no login and no remote access.
+- Single user, single machine. There is no remote access.
 - The Claude Code `.jsonl` format is not a public contract. Unknown record types are counted and skipped, but a format change can hide some data.
-- DWG preview needs the optional `chitralipi` program.
-- The default config was written for one person's folder layout; check `config.toml` after first start.
 
 ## Development
-
-Run from the repository root:
 
 ```bash
 gofmt -l .                                   # must print nothing
@@ -108,25 +142,23 @@ go vet ./... && go test -race -count=1 ./... # takes a couple of minutes
 cd web && npm run typecheck && npx vitest run && npm run e2e
 ```
 
-- Warning: `npm ci` deletes `web/node_modules` and reinstalls it. Run it on purpose, not by habit. `make web` runs it.
-- For a second instance, use a throwaway data folder and a free port: `DRASHTA_HOME=$(mktemp -d) ./drashta -port 4467`. Check the port is free first with `lsof -nP -iTCP:4467 -sTCP:LISTEN`.
+- `npm ci` deletes `web/node_modules` and reinstalls it. Run it on purpose.
+- Try it without touching your real data: `DRASHTA_HOME=$(mktemp -d) ./drashta -port 4467`. Check the port is free first with `lsof -nP -iTCP:4467 -sTCP:LISTEN`.
+- `npm --prefix web run dev` starts the Vite dev server (run drashta with `-dev` beside it). `npm --prefix web run dev:mock` runs the UI on mock data, which is how the screenshots above were made.
 - After any UI change, check the layout in a headless browser at 1440x900 and 1000x665. Unit tests cannot see layout.
-- `npm --prefix web run dev` starts the Vite dev server (run drashta with `-dev` beside it); `npm --prefix web run dev:mock` runs it on mock data.
 
-## Project layout
+Where things live:
 
-- `cmd/drashta`: the program entry point and command line.
-- `internal/`: Go packages (`httpapi`, `indexer`, `store`, `probe`, `config`, `runx`, `pathguard`, and more). Each has a `doc.go` that lists its API.
-- `web/`: the React app (`web/app/{routes,components,lib,mocks,styles}`), built into `web/build/client` and embedded in the binary.
-- `docs/`: specs, decisions and architecture notes. Start with `docs/README.md`; the binding decisions are in `docs/decisions.md`.
-- `docs/adr/`: architecture decision records.
-- `contrib/desktop/`: optional desktop mode scripts for macOS.
-- `CONTEXT.md`: glossary.
+- `cmd/drashta`: entry point and command line.
+- `internal/`: Go packages. Each has a `doc.go` that lists its API.
+- `web/`: the React app, built into `web/build/client` and embedded in the binary.
+- `docs/`: architecture, decisions and specs. Start with [`docs/README.md`](docs/README.md).
+- `contrib/desktop/`: the optional wallpaper-mode scripts.
 
 ## Contributing
 
-See `CONTRIBUTING.md`.
+Issues and pull requests are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
-MIT. See `LICENSE`.
+MIT. See [`LICENSE`](LICENSE).

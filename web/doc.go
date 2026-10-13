@@ -15,6 +15,6 @@
 // index.html carries <meta name="drashta-token" content="__DRASHTA_TOKEN__">.
 // The server replaces that tag with the real CSRF token when it serves the page.
 //
-// The frontend source is in app/ (see SCAFFOLD_READY for the folder map and
+// The frontend source is in app/ (see docs/architecture.md for the folder map and
 // the npm commands).
 package web

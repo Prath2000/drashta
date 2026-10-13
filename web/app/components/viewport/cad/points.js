@@ -4,7 +4,7 @@
  *
  * ReviewCanvas needs the question "would an operator see a shape here, or a
  * 3-pixel anchor" answered on the ingest pass, to count the rows whose
- * exploded read produced no drawable geometry — CLAUDE.md's
+ * exploded read produced no drawable geometry — the project's
  * ambiguity-is-reported rule. A second copy of the type switch over there
  * would drift the first time a type is added here, and drift in this
  * direction is silent: the count would quietly stop counting.
