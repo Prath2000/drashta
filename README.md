@@ -3,7 +3,7 @@
 # द्रष्टा drashta
 
 **A local command center for everything you build.**
-See all your projects at a glance, or turn the whole thing into a live desktop wallpaper.
+A project dashboard you open in any browser, and the same page doubles as a live desktop wallpaper.
 
 [![CI](https://github.com/Prath2000/drashta/actions/workflows/ci.yml/badge.svg)](https://github.com/Prath2000/drashta/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -40,9 +40,9 @@ It is a single Go binary with the web app built in. Start it, open a browser tab
   </tr>
 </table>
 
-## Use it as a wallpaper
+## Browser page and wallpaper
 
-drashta has three display modes, switched from the top bar:
+drashta is a normal web page, so you can use it in a browser tab, as a wallpaper, or both at once. Three display modes, switched from the top bar:
 
 | Mode | What it does |
 | --- | --- |
